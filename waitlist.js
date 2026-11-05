@@ -46,3 +46,14 @@
   // Gentle fade-in as sections scroll into view
   const io = "IntersectionObserver" in window ? new IntersectionObserver((es) => es.forEach((x) => { if (x.isIntersecting) { x.target.classList.add("in"); io.unobserve(x.target); } }), { threshold: 0.12 }) : null;
   document.querySelectorAll(".reveal").forEach((el) => (io ? io.observe(el) : el.classList.add("in")));
+
+  // "Join the waitlist" buttons: glide to the sign-up box at the top and pop the keyboard/cursor into the email field
+  function focusJoin(e) {
+    const box = document.getElementById("join"); if (!box) return;
+    e.preventDefault();
+    box.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "center" });
+    const inp = box.querySelector('input[type="email"]'); if (inp) setTimeout(() => inp.focus({ preventScroll: true }), 450);
+  }
+  document.querySelectorAll('a[href="#join"]').forEach((a) => a.addEventListener("click", focusJoin));
+  // If the fade-in can't run for any reason, make sure nothing stays hidden
+  setTimeout(() => document.querySelectorAll(".reveal").forEach((el) => el.classList.add("in")), 2500);
